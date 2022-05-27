@@ -1,4 +1,9 @@
+CC = gcc
+CFLAGS = -O3 -g3  -W -Wall -Wextra -Wuninitialized -Wstrict-aliasing -std=c11
+
 seq:
-	gcc jacobiseq.c -o jacobiseq
-rseq:
-	./jacobiseq
+	${CC} ${CFLAGS} jacobiseq.c -o jacobiseq.out -lm
+	./jacobiseq.out
+
+clean:
+	rm -f acobiseq.out

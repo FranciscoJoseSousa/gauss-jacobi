@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 
 #define N 5
 #define e 0.1
@@ -21,7 +22,7 @@ int main()
         for (int j = 0; j < N; j++)
         {
             A[i][j] = rand() % 1000;
-            if (i == j && A[i][j] == 0)
+            if(i == j && A[i][j] == 0)
             {
                 A[i][j] = rand() % 1000;
             }
@@ -60,8 +61,8 @@ int main()
     print_matrizG(G);
     printf("\n");
     double erro = e;
-    double dx = 100000000.0;
-    while (dx > e)
+    double dx;
+    while(1==1)
     {
         double CX[N][1];
         for (int i = 0; i < N; i++)
@@ -80,6 +81,28 @@ int main()
         for (int i = 0; i < N; i++)
         {
             X[i][0] = CX[i][0] + G[i][0];
+        }
+        double maximoX = -1000000.00;
+        double maximodX = -1000000.00;
+        for(int i = 0;i<N;i++){
+            maximoX = fmax(maximoX,X[i][0]);
+        }
+        maximoX = fabs(maximoX);
+        double diferencaX;
+        for(int i = 0;i<N;i++){
+            diferencaX = fabs(X[i][0]-X0[i][0]);
+            maximodX = fmax(maximodX,diferencaX);
+        }
+        dx = maximodX/maximoX;
+        printf("Matriz X:\n");
+        print_matrizG(X);
+        printf("\n");
+        printf("maximoX = %f\n",maximoX);
+        printf("maximodX = %f\n",maximodX);
+        printf("dx = %f\n",dx);
+        if(dx < erro) break;
+        for(int i = 0;i<N;i++){
+            X0[i][0] = X[i][0];
         }
     }
     return 0;
