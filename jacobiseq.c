@@ -3,7 +3,7 @@
 #include <math.h>
 
 #define N 5
-#define e 0.1
+#define e 0.01
 double X0[N][1];
 
 void print_matrizA(int matriz[N][N]);
@@ -21,8 +21,8 @@ int main()
     {
         for (int j = 0; j < N; j++)
         {
-            A[i][j] = rand() % 1000;
-            if(i == j && A[i][j] == 0)
+            A[i][j] = rand() % 10;
+            if(i == j)
             {
                 A[i][j] = rand() % 1000;
             }
@@ -30,7 +30,7 @@ int main()
     }
     for (int i = 0; i < N; i++)
     {
-        B[i][0] = rand() % 1000;
+        B[i][0] = rand() % 100;
     }
     printf("Matriz A:\n");
     print_matrizA(A);
@@ -85,7 +85,7 @@ int main()
         double maximoX = -1000000.00;
         double maximodX = -1000000.00;
         for(int i = 0;i<N;i++){
-            maximoX = fmax(maximoX,X[i][0]);
+            maximoX = fmax(maximoX,fabs(X[i][0]));
         }
         maximoX = fabs(maximoX);
         double diferencaX;
