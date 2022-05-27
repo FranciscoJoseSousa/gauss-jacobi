@@ -4,6 +4,7 @@
 
 #define N 5
 #define e 0.01
+#define seed 1
 double X0[N][1];
 
 void print_matrizA(int matriz[N][N]);
@@ -13,7 +14,7 @@ void print_matrizG(double matriz[N][1]);
 
 int main()
 {
-    srand(1);
+    srand(seed);
     int A[N][N];
     double X[N][1];
     int B[N][1];
@@ -21,7 +22,7 @@ int main()
     {
         for (int j = 0; j < N; j++)
         {
-            A[i][j] = rand() % 10;
+            A[i][j] = rand() % 100;
             if(i == j)
             {
                 A[i][j] = rand() % 1000;
@@ -105,6 +106,18 @@ int main()
             X0[i][0] = X[i][0];
         }
     }
+    printf("Escolha qual equacao vc quer substituir: \n");
+    int n;
+    scanf("%d",&n);
+    while(n > N){
+      printf("Escolha uma equacao valida: \n");
+      scanf("%d",&n);
+    }
+    double resultado = 0.0;
+    for(int i = 0;i<N;i++){
+      resultado += A[n-1][i]*X[i][0];
+    }
+    printf("O resultado obtido foi %f\nresultado esperado eh %d\n",resultado,B[n-1][0]);
     return 0;
 }
 
