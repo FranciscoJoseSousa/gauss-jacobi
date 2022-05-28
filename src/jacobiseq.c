@@ -66,7 +66,7 @@ void get_matrix_g(double ** matrix_a, double ** matrix_b, double ** matrix_g, in
 	}
 }
 
-void apply_jacobi(double ** matrix_c, double ** matrix_g, double ** matrix_x, double ** matrix_x0){
+void apply_jacobi(double ** matrix_c, double ** matrix_g, double ** matrix_x, double ** matrix_x0,int N){
 	while (1 == 1) {
 		double ** matrix_cx = malloc_matrix(N,1);
 		double maximoX = -1000000.00;
@@ -115,7 +115,7 @@ void apply_jacobi(double ** matrix_c, double ** matrix_g, double ** matrix_x, do
 	
 }
 
-void equacao(double ** matrix_a, double ** matrix_b, double ** matrix_x){
+void equacao(double ** matrix_a, double ** matrix_b, double ** matrix_x,int N){
 	int n;
 	double resultado = 0.0;
 	
@@ -136,7 +136,7 @@ void equacao(double ** matrix_a, double ** matrix_b, double ** matrix_x){
 
 }
 
-void jacoviseq_new() {
+void jacoviseq_new(int N) {
 	// Definir e alocar memoria para as matrizes
 	double **matrix_a;
 	double **matrix_b;
@@ -168,9 +168,9 @@ void jacoviseq_new() {
 	get_matrix_c(matrix_a, matrix_c, N, N);
 	get_matrix_g(matrix_a, matrix_b, matrix_g, N);
 
-	apply_jacobi(matrix_c, matrix_g, matrix_x, matrix_x0);
+	apply_jacobi(matrix_c, matrix_g, matrix_x, matrix_x0,N);
 
-	equacao(matrix_a, matrix_b, matrix_x);
+	equacao(matrix_a, matrix_b, matrix_x,N);
 	
 }
 
