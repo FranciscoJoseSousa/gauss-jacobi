@@ -1,11 +1,17 @@
-#include "jacobipar.h"
+#include "parametro.h"
 
 int main(int argc, char *argv[]) {
-	printf("Inicio do programa paralelo:\n");
-	//int N = atoi(argv[1]);
-	//int T = atoi(argv[2]);
-	int N = 5;
-	int T = 2;
+	double tempo = omp_get_wtime ();
+	int N = atoi(argv[1]);
+	int T = atoi(argv[2]);
+	
+	printf("Inicio do programa par para N = %d e T = %d:\n", N, T);
+	
 	jacovipar_new(N,T);
+
+	tempo = omp_get_wtime () - tempo;
+
+	printf("Tempo de execução: %f ⏱️\n", tempo);
+	
 	return 0;
 }
