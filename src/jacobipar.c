@@ -12,12 +12,12 @@ double **malloc_matrix_par(int lin, int col, int T) {
 
 void fill_matrix_par(double **matrix, int lin, int col, int T) {
 	srand(seed);
-#pragma omp parallel for num_threads(T) collapse(2)
+#pragma omp parallel for num_threads(T) 
 	for (int i = 0; i < lin; i++) {
 		for (int j = 0; j < col; j++) {
 			matrix[i][j] = rand() % 1000;
 			if (i == j && lin == col) {
-				matrix[i][j] = rand() % 10000;
+				matrix[i][j] = rand() % 1000;
 			}
 		}
 	}
@@ -26,12 +26,11 @@ void fill_matrix_par(double **matrix, int lin, int col, int T) {
 void fill_matrix_par_a(double **matrix, int lin, int col, int T) {
 	srand(seed);
 	int criterio_convergencia;
-#pragma omp parallel for num_threads(T)
 	for (int i = 0; i < lin; i++) {
 		criterio_convergencia = 0;
 		for (int j = 0; j < col; j++) {
 			if (i == j) {
-				matrix[i][i] += rand() % 10000;
+				matrix[i][i] += rand() % 1000;
 			} else {
 				matrix[i][j] = rand() % 1000;
 				criterio_convergencia += matrix[i][j];
@@ -95,7 +94,7 @@ void apply_jacobi_par(
 		double diferencaX;
 		double dx;
 
-#pragma omp parallel for num_threads(T) collapse(2)
+		#pragma omp parallel for num_threads(T) 
 		for (int i = 0; i < N; i++) {
 			for (int j = 0; j < 1; j++) {
 				matrix_cx[i][j] = 0.0;
@@ -104,17 +103,16 @@ void apply_jacobi_par(
 				}
 			}
 		}
-#pragma omp parallel for num_threads(T)
+		#pragma omp parallel for num_threads(T)
 		for (int i = 0; i < N; i++) {
 			matrix_x[i][0] = matrix_cx[i][0] + matrix_g[i][0];
 		}
-#pragma omp parallel for num_threads(T)
+
 		for (int i = 0; i < N; i++) {
 			maximoX = fmax(maximoX, fabs(matrix_x[i][0]));
 		}
 
 		maximoX = fabs(maximoX);
-#pragma omp parallel for num_threads(T)
 		for (int i = 0; i < N; i++) {
 			diferencaX = fabs(matrix_x[i][0] - matrix_x0[i][0]);
 			maximodX = fmax(maximodX, diferencaX);
@@ -169,7 +167,7 @@ void jacovipar_new(int N, int T) {
 	double **matrix_g;
 	double **matrix_x;
 	double **matrix_x0;
-
+	omp_set_dynamic(0);     
 	// Alocar memoria
 	matrix_a = malloc_matrix_par(N, N, T);
 	matrix_b = malloc_matrix_par(N, 1, T);
@@ -184,14 +182,21 @@ void jacovipar_new(int N, int T) {
 
 	printf("Matriz prenchida com sucesso! 👌\n");
 
-	//print_matrix_par(matrix_a, N, N);
-	//print_matrix_par(matrix_b, N, 1);
+	// print_matrix_par(matrix_a, N, N);
+	// print_matrix_par(matrix_b, N, 1);
 
 	printf("Matriz printada com sucesso! 👌\n");
-	 get_matrix_par_c(matrix_a, matrix_c, N, N ,T);
+	get_matrix_par_c(matrix_a, matrix_c, N, N ,T);
 	get_matrix_par_g(matrix_a, matrix_b, matrix_g, N ,T);
-	 apply_jacobi_par(matrix_c, matrix_g, matrix_x, matrix_x0 ,N ,T);
+	apply_jacobi_par(matrix_c, matrix_g, matrix_x, matrix_x0 ,N ,T);
 
 	equacao_par(matrix_a, matrix_b, matrix_x ,N ,T);
+	free_matrix(matrix_a, N);
+	free_matrix(matrix_b, N);
+	free_matrix(matrix_c, N);
+	free_matrix(matrix_g, N);
+	free_matrix(matrix_x, N);
+	free_matrix(matrix_x0, N);
 
+	printf("Matrizes   free  com sucesso! 👌\n");
 }
