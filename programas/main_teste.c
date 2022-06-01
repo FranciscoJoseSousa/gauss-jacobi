@@ -8,7 +8,7 @@ int main(int argc, char *argv[]) {
 	FILE *out_file = fopen("resultado.txt", "a+");  // write only
 
 	// test for files not existing.
-	if (in_file == NULL || out_file == NULL) {
+	if (in_file_seq == NULL || in_file_par == NULL || out_file == NULL) {
 		printf("Error! Could not open file\n");
 		exit(-1); // must include stdlib.h
 	}
@@ -24,8 +24,9 @@ int main(int argc, char *argv[]) {
 
 	// fscanf(stdin, "%d %d", &int_var_1, &int_var_2);
 	// scanf("%d %d", &int_var_1, &int_var_2);
-
+	double seq,par;
 	if (mode == 1 || mode == 3) {
+		fprintf(stdout, "Rodando no modo %d\n", mode);
 		fprintf(out_file, "Rodando no modo %d\n", mode);
 		while (1 == 1) {
 			fscanf(in_file_seq, "%d %d", &N, &T);
@@ -41,6 +42,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	if (mode == 2 || mode == 3) {
+		fprintf(stdout, "Rodando no modo %d\n", mode);
 		fprintf(out_file, "Rodando no modo %d\n", mode);
 		while (1 == 1) {
 			fscanf(in_file_par, "%d %d", &N, &T);

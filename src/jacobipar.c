@@ -80,7 +80,7 @@ void get_matrix_par_g(
 	}
 }
 
-void apply_jacobi(
+void apply_jacobi_par(
 	double **matrix_c,
 	double **matrix_g,
 	double **matrix_x,
@@ -171,6 +171,7 @@ double jacobipar(int N, int T) {
 	double **matrix_g;
 	double **matrix_x;
 	double **matrix_x0;
+	double **matrix_cx;
 	omp_set_dynamic(0);     
 	// Alocar memoria
 	matrix_a = malloc_matrix_par(N, N, T);
