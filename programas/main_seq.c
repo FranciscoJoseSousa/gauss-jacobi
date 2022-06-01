@@ -6,7 +6,7 @@ int main(int argc, char *argv[]) {
 	
 	printf("Inicio do programa sequencial para N = %d:\n", N);
 	
-	jacoviseq_new(N);
+	jacobiseq(N);
 
 	tempo = omp_get_wtime () - tempo;
 

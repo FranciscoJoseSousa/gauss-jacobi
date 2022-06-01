@@ -15,9 +15,9 @@ void fill_matrix_par(double **matrix, int lin, int col, int T) {
 #pragma omp parallel for num_threads(T) 
 	for (int i = 0; i < lin; i++) {
 		for (int j = 0; j < col; j++) {
-			matrix[i][j] = rand() % 1000;
+			matrix[i][j] = rand() % 100;
 			if (i == j && lin == col) {
-				matrix[i][j] = rand() % 1000;
+				matrix[i][j] = rand() % 100;
 			}
 		}
 	}
@@ -80,11 +80,12 @@ void get_matrix_par_g(
 	}
 }
 
-void apply_jacobi_par(
+void apply_jacobi(
 	double **matrix_c,
 	double **matrix_g,
 	double **matrix_x,
 	double **matrix_x0,
+	double **matrix_cx,
 	int N,
 	int T) {
 	while (1 == 1) {
@@ -125,8 +126,10 @@ void apply_jacobi_par(
 		// printf("maximoX = %f\n", maximoX);
 		// printf("maximodX = %f\n", maximodX);
 		// printf("dx = %f\n", dx);
-		if (dx < e)
+		if (dx < e){
+			free_matrix(matrix_cx, N);
 			break;
+		}
 #pragma omp parallel for num_threads(T)
 		for (int i = 0; i < N; i++) {
 			matrix_x0[i][0] = matrix_x[i][0];
@@ -141,7 +144,7 @@ void equacao_par(
 	int N,
 	int T) {
 	int n = Ne, i;
-	long double resultado = 0.0;
+	double resultado = 0.0;
 
 /*printf("Escolha qual equacao_par vc quer substituir: \n");
 scanf("%d", &n);
@@ -154,12 +157,13 @@ while (n > N) {
 		resultado += matrix_a[n - 1][i] * matrix_x[i][0];
 	}
 	printf(
-		"O resultado obtido foi %lf\nresultado esperado eh %f\n",
+		"O resultado obtido foi %f\nresultado esperado eh %f\n",
 		resultado,
 		matrix_b[n - 1][0]);
 }
 
-void jacovipar_new(int N, int T) {
+double jacobipar(int N, int T) {
+	double tempo = omp_get_wtime ();
 	// Definir e alocar memoria para as matrizes
 	double **matrix_a;
 	double **matrix_b;
@@ -175,6 +179,7 @@ void jacovipar_new(int N, int T) {
 	matrix_g = malloc_matrix_par(N, 1, T);
 	matrix_x = malloc_matrix_par(N, 1, T);
 	matrix_x0 = malloc_matrix_par(N, 1, T);
+	matrix_cx = malloc_matrix(N, 1);
 
 	printf("Memória alocada com sucesso! 👌\n");
 	fill_matrix_par_a(matrix_a, N, N, T);
@@ -188,7 +193,7 @@ void jacovipar_new(int N, int T) {
 	printf("Matriz printada com sucesso! 👌\n");
 	get_matrix_par_c(matrix_a, matrix_c, N, N ,T);
 	get_matrix_par_g(matrix_a, matrix_b, matrix_g, N ,T);
-	apply_jacobi_par(matrix_c, matrix_g, matrix_x, matrix_x0 ,N ,T);
+	apply_jacobi(matrix_c, matrix_g, matrix_x, matrix_x0,matrix_cx, N,T);
 
 	equacao_par(matrix_a, matrix_b, matrix_x ,N ,T);
 	free_matrix(matrix_a, N);
@@ -197,6 +202,13 @@ void jacovipar_new(int N, int T) {
 	free_matrix(matrix_g, N);
 	free_matrix(matrix_x, N);
 	free_matrix(matrix_x0, N);
+	free_matrix(matrix_cx, N);
 
 	printf("Matrizes   free  com sucesso! 👌\n");
+
+	tempo = omp_get_wtime () - tempo;
+
+	printf("Tempo: %f\n\n", tempo);
+
+	return tempo;
 }

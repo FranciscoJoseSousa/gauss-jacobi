@@ -1,4 +1,5 @@
 #include "parametro.h"
+void free_matrix(double **matrix, int lin);
 
 double **malloc_matrix(int lin, int col) {
 	double **matrix = (double **)malloc(lin * sizeof(double *));
@@ -13,9 +14,9 @@ void fill_matrix(double **matrix, int lin, int col) {
 
 	for (int i = 0; i < lin; i++) {
 		for (int j = 0; j < col; j++) {
-			matrix[i][j] = rand() % 1000;
+			matrix[i][j] = rand() % 100;
 			if (i == j && lin == col) {
-				matrix[i][j] = rand() % 10000;
+				matrix[i][j] = rand() % 100;
 			}
 		}
 	}
@@ -28,17 +29,16 @@ void fill_matrix_a(double ** matrix, int lin, int col){
     criterio_convergencia = 0;
 		for(int j = 0; j<col; j++){
 			if (i == j) {
-				matrix[i][j] = rand() % 10000;
+				matrix[i][j] = rand() % 100;
 			}
       else {
-        matrix[i][j] = rand() % 1000;
+        matrix[i][j] = rand() % 100;
         criterio_convergencia += matrix[i][j];
       }
 		}
     matrix[i][i] += criterio_convergencia;
 	}
 }
-
 
 
 void print_matrix(double **matrix, int lin, int col) {
@@ -78,9 +78,10 @@ void apply_jacobi(
 	double **matrix_g,
 	double **matrix_x,
 	double **matrix_x0,
+	double **matrix_cx,
 	int N) {
 	while (1 == 1) {
-		double **matrix_cx = malloc_matrix(N, 1);
+		
 		double maximoX = -1000000.00;
 		double maximodX = -1000000.00;
 		double diferencaX;
@@ -117,8 +118,9 @@ void apply_jacobi(
 		// printf("maximoX = %f\n", maximoX);
 		// printf("maximodX = %f\n", maximodX);
 		// printf("dx = %f\n", dx);
-		if (dx < e)
+		if (dx < e){
 			break;
+		}
 		for (int i = 0; i < N; i++) {
 			matrix_x0[i][0] = matrix_x[i][0];
 		}
@@ -152,7 +154,9 @@ void free_matrix(double **matrix, int lin) {
 	matrix = NULL;
 }
 
-void jacoviseq_new(int N) {
+double jacobiseq(int N) {
+	double tempo = omp_get_wtime ();
+	
 	// Definir e alocar memoria para as matrizes
 	double **matrix_a;
 	double **matrix_b;
@@ -160,6 +164,7 @@ void jacoviseq_new(int N) {
 	double **matrix_g;
 	double **matrix_x;
 	double **matrix_x0;
+	double **matrix_cx;
 
 	// Alocar memoria
 	matrix_a = malloc_matrix(N, N);
@@ -168,6 +173,7 @@ void jacoviseq_new(int N) {
 	matrix_g = malloc_matrix(N, 1);
 	matrix_x = malloc_matrix(N, 1);
 	matrix_x0 = malloc_matrix(N, 1);
+	matrix_cx = malloc_matrix(N, 1);
 
 	printf("Memória  alocada com sucesso! 👌\n");
 
@@ -188,7 +194,7 @@ void jacoviseq_new(int N) {
 
 	printf("Matriz  g obtida com sucesso! 👌\n");
 
-	apply_jacobi(matrix_c, matrix_g, matrix_x, matrix_x0, N);
+	apply_jacobi(matrix_c, matrix_g, matrix_x, matrix_x0,matrix_cx, N);
 
 	printf("Jacobi  aplicado com sucesso! 👌\n");
 
@@ -201,7 +207,13 @@ void jacoviseq_new(int N) {
 	free_matrix(matrix_g, N);
 	free_matrix(matrix_x, N);
 	free_matrix(matrix_x0, N);
+	free_matrix(matrix_cx, N);
 
 	printf("Matrizes   free  com sucesso! 👌\n");
 
+	tempo = omp_get_wtime () - tempo;
+
+	printf("Tempo: %f\n\n", tempo);
+
+	return tempo;
 }

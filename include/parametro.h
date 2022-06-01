@@ -9,6 +9,8 @@
 #define seed 1
 #define Ne 1
 
-void jacovipar_new(int N,int T);
-void jacoviseq_new(int N);
+double jacovipar(int N,int T);
+double jacobiseq(int N);
+void teste();
+
 #endif

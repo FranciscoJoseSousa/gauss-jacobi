@@ -10,6 +10,8 @@ export FLAG
 
 IMPLEMENT_SEQ = jacobiseq
 IMPLEMENT_PAR = jacobipar
+IMPLEMENT_TESTE = teste
+PROG_TESTE = main_teste
 PROG_SEQ = main_seq
 PROG_PAR = main_par
 
@@ -24,6 +26,12 @@ par:
 	${CC} $(FLAG) -c $(SRC)/$(IMPLEMENT_PAR).c -I $(INCLUDE) -o $(OBJ)/$(IMPLEMENT_PAR).out $(LIB)
 	${CC} $(FLAG) $(MAIN)/$(PROG_PAR).c $(OBJ)/*.out -I $(INCLUDE) -o $(BIN)/$(PROG_PAR) $(LIB)
 	$(BIN)/$(PROG_PAR) $(N) $(T) 
+
+teste:
+	${CC} $(FLAG) -c $(SRC)/$(IMPLEMENT_SEQ).c -I $(INCLUDE) -o $(OBJ)/$(IMPLEMENT_SEQ).out $(LIB)
+	${CC} $(FLAG) -c $(SRC)/$(IMPLEMENT_PAR).c -I $(INCLUDE) -o $(OBJ)/$(IMPLEMENT_PAR).out $(LIB)
+	${CC} $(FLAG) $(MAIN)/$(PROG_TESTE).c $(OBJ)/*.out -I $(INCLUDE) -o $(BIN)/$(PROG_TESTE) $(LIB)
+	$(BIN)/$(PROG_TESTE) $(M)
 
 clean:
 	rm $(OBJ)/*
