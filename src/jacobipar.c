@@ -30,9 +30,9 @@ void fill_matrix_par_a(double **matrix, int lin, int col, int T) {
 		criterio_convergencia = 0;
 		for (int j = 0; j < col; j++) {
 			if (i == j) {
-				matrix[i][i] += rand() % 1000;
+				matrix[i][i] += rand() % 100;
 			} else {
-				matrix[i][j] = rand() % 1000;
+				matrix[i][j] = rand() % 100;
 				criterio_convergencia += matrix[i][j];
 			}
 		}
@@ -141,7 +141,7 @@ void equacao_par(
 	int N,
 	int T) {
 	int n = Ne, i;
-	double resultado = 0.0;
+	long double resultado = 0.0;
 
 /*printf("Escolha qual equacao_par vc quer substituir: \n");
 scanf("%d", &n);
@@ -154,7 +154,7 @@ while (n > N) {
 		resultado += matrix_a[n - 1][i] * matrix_x[i][0];
 	}
 	printf(
-		"O resultado obtido foi %f\nresultado esperado eh %f\n",
+		"O resultado obtido foi %lf\nresultado esperado eh %f\n",
 		resultado,
 		matrix_b[n - 1][0]);
 }
